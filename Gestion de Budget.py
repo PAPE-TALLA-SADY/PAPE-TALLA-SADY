@@ -1,36 +1,44 @@
-print("Plateforme de gestion de budget")
+    table_transactions.insert({'type' : type_transaction, 'montant' : montant, 'categorie' : categorie})
+    print('transaction ajoutee')
 
-from tinydb import TinyDB, Query
+def categories():
+    categorie = input('categorie : ')
+    table_categroies.insert({'name': categorie})
+    print('categorie ajoutee')
 
-db = TinyDB('budget.json')
+def calcul_depenses():
+    depenses = table_transactions.search(Query().type == 'depense')
+    somme_total = sum([depense['montant'] for depense in depenses])
+    return somme_total
 
-class Depense:
-    def __init__(self, montant, categorie):
-        self.montant = montant
-        self.categorie = categorie
+def calcul_revenus():
+    revenu = table_transactions.search(Query().type == 'revenu')
+    somme_total = sum([revenus['montant'] for revenus in revenu])
+    return somme_total
 
-class Revenu:
-    def __init__(self, montant, categorie):
-        self.montant = montant
-        self.categorie = categorie
-
-def enregistrer_depense(montant, categorie):
-    depense = Depense(montant, categorie)
-    db.insert({'type': 'depense', 'montant': depense.montant, 'categorie': depense.categorie})
-
-def enregistrer_revenu(montant, categorie):
-    revenu = Revenu(montant, categorie)
-    db.insert({'type': 'revenu', 'montant': revenu.montant, 'categorie': revenu.categorie})
-
-def calculer_ecart():
-    total_depenses = sum(entry['montant'] for entry in db if entry['type'] == 'depense')
-    total_revenus = sum(entry['montant'] for entry in db if entry['type'] == 'revenu')
-    ecart = total_revenus - total_depenses
-    return ecart
-
-# Exemple d'utilisation
-enregistrer_depense(50, 'Manger')
-enregistrer_depense(30, 'Transport')
-enregistrer_revenu(1000, 'Salaire')
-
-print("Ecart:", calculer_ecart())
+def rapport():
+    depenses = calcul_depenses()
+    revenus = calcul_revenus()
+    Ecart = revenus - depenses
+    print(f'depenses: {depenses}')
+    print(f'revenus: {revenus}')
+    print(f'Ecart : {Ecart}')
+    
+if __name__ == '__main__':
+    while True:
+        print('1 - Ajouter une transaction')
+        print('2 - Ajouter une categorie')
+        print("3 - generer l'ecart")
+        print('4 - quitter')
+        choix = int(input('entrer votre choix: '))
+        if choix == 1:
+            transactions()
+        elif choix == 2:
+            categories()
+        elif choix == 3:
+            rapport()
+        elif choix == 4:
+            print('Fin du programme')
+            break
+        else:
+            print('choix invalide. veuillez reessayer!')
