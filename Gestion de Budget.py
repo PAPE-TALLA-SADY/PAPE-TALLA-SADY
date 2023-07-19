@@ -1,3 +1,13 @@
+from tinydb import TinyDB, Query
+
+db = TinyDB('budget_db.json')
+table_transactions = db.table('transactions')
+table_categroies = db.table('categories')
+
+def transactions():
+    type_transaction = input("veuillez saisir le type de transaction (depense/revenu) : ")
+    montant = int(input("le montant : "))
+    categorie = input("Categorie : ")
     table_transactions.insert({'type' : type_transaction, 'montant' : montant, 'categorie' : categorie})
     print('transaction ajoutee')
 
